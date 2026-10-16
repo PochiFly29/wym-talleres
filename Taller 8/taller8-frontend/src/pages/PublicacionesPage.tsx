@@ -126,9 +126,35 @@ const PublicacionesPage: React.FC = () => {
           handler: async () => {
             try {
               await eliminarPublicacion(publicacion.id);
-              mostrarMensaje("Publicación eliminada", "success");
               setModalAbierto(false);
               await cargar();
+
+              // Toast con botón Deshacer usando el propio publicacion de la clausura
+              presentarToast({
+                message: "Publicación eliminada",
+                duration: 5000,
+                position: "bottom",
+                buttons: [
+                  {
+                    text: "Deshacer",
+                    role: "action",
+                    handler: async () => {
+                      try {
+                        await crearPublicacion({
+                          title: publicacion.title,
+                          body: publicacion.body,
+                          userId: publicacion.userId,
+                          id: publicacion.id
+                        } as any);
+                        await cargar();
+                        mostrarMensaje("Publicación restaurada", "success");
+                      } catch (error) {
+                        mostrarMensaje(mensajeDeError(error), "danger");
+                      }
+                    }
+                  }
+                ]
+              });
             } catch (error) {
               mostrarMensaje(mensajeDeError(error), "danger");
             }
