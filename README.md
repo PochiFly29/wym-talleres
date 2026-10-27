@@ -35,13 +35,13 @@ Cada carpeta de taller que contenga frontend y backend requiere levantar ambos e
 
 1. **Backend:**
    ```bash
-   cd Taller\ 9/taller9-backend
+   cd "Taller 9/taller9-backend"
    npm install
    npm run dev```
    
 2. **Frontend:**
    ```bash
-      cd Taller\ 9/taller9-frontend
-      npm install
-      ionic serve
+    cd "Taller 9/taller9-frontend"
+    npm install
+    ionic serve
    ```
