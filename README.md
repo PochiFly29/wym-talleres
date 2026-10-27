@@ -2,7 +2,7 @@
 
 Este repositorio contiene las soluciones e implementaciones desarrolladas para la asignatura de **Ingeniería Web y Móvil** de la Pontificia Universidad Católica de Valparaíso (PUCV).
 
-**Autor:** [Tu Nombre Completo]  
+**Autor:** Iván Ferreira León  
 **Carrera:** Ingeniería Civil Informática / Ingeniería Informática — PUCV  
 
 ---
@@ -37,4 +37,11 @@ Cada carpeta de taller que contenga frontend y backend requiere levantar ambos e
    ```bash
    cd Taller\ 9/taller9-backend
    npm install
-   npm run dev
+   npm run dev```
+   
+2. **Frontend:**
+   ```bash
+      cd Taller\ 9/taller9-frontend
+      npm install
+      ionic serve
+   ```
