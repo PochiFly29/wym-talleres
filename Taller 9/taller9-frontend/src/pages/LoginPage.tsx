@@ -15,17 +15,23 @@ import {
 } from "@ionic/react";
 
 import { iniciarSesion } from "../services/api";
-import { guardarSesion } from "../services/sesion";
+import { guardarSesion } from "../services/sesion"; // <-- FALTA ESTA LÍNEA
+import { useNavigate } from 'react-router-dom';
+
+
 import "./LoginPage.css";
 
 // Esta página ya está lista: no necesitas modificarla.
 // La petición al servidor se completa en src/services/api.ts (paso 8).
+
+
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [enviando, setEnviando] = useState(false);
   const router = useIonRouter();
+  const navigate = useNavigate();
   const [presentarToast] = useIonToast();
 
   const ingresar = async (evento: React.FormEvent) => {
@@ -88,6 +94,9 @@ const LoginPage: React.FC = () => {
 
           <IonButton type="submit" expand="block" disabled={enviando}>
             Ingresar
+          </IonButton>
+          <IonButton expand="block" fill="clear" onClick={() => navigate('/registro')}>
+            Regístrate aquí
           </IonButton>
         </form>
       </IonContent>

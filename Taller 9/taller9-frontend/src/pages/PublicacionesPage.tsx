@@ -29,7 +29,7 @@ import {
   useIonViewWillEnter
 } from "@ionic/react";
 import type { RefresherEventDetail } from "@ionic/react";
-import { add } from "ionicons/icons";
+import { add, navigate } from "ionicons/icons";
 
 import FormularioPublicacion from "../components/FormularioPublicacion";
 import {
@@ -193,7 +193,10 @@ const PublicacionesPage: React.FC = () => {
           <IonButtons slot="end">
             {sesion ? (
               <>
-                <span className="usuario">{sesion.username}</span>
+                
+                <IonButton fill="clear" color="dark" onClick={() => router.push('/cambiar-password')}>
+                  👤 {sesion.username}
+                </IonButton>
                 <IonButton onClick={salir}>Salir</IonButton>
               </>
             ) : (

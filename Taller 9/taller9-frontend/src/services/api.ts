@@ -49,6 +49,31 @@ const procesarRespuesta = async (response: Response) => {
   return datos;
 };
 
+// DESAFIO: Peticion registrar usuario
+export const registrarUsuario = async (username: string, password: string) => {
+  const response = await fetch(`${API_URL}/api/usuarios`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
+  return procesarRespuesta(response);
+};
+
+// Desafio 2
+export const cambiarPassword = async (passwordActual: string, passwordNueva: string) => {
+  const response = await fetch(`${API_URL}/api/usuarios/yo/password`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...encabezadosConToken() // Envía el header Authorization: Bearer <token>
+    },
+    body: JSON.stringify({ passwordActual, passwordNueva })
+  });
+
+  return procesarRespuesta(response);
+};
+
 // 8: POST /api/login
 // Envía username y password, y devuelve la respuesta del servidor ({ token, id, username }).
 // Pista: es muy parecida a crearPublicacion.

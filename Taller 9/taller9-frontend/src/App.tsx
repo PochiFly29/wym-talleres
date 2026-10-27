@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import PublicacionesPage from './pages/PublicacionesPage';
 // 10: Importar obtenerSesion desde './services/sesion'.
 import { obtenerSesion } from './services/sesion';
+import RegistroPage from './pages/RegistroPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -35,6 +36,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import CambiarPasswordPage from './pages/CambiarPasswordPage';
 
 setupIonicReact();
 
@@ -49,6 +51,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route path="/login" element={<LoginPage />} />
+
         {/* 10: Proteger esta ruta envolviendo la página con RutaProtegida. */}
         <Route
           path="/publicaciones"
@@ -58,6 +61,15 @@ const App: React.FC = () => (
             </RutaProtegida>
           }
         />
+        <Route
+          path="/cambiar-password"
+          element={
+            <RutaProtegida>
+              <CambiarPasswordPage />
+            </RutaProtegida>
+          }
+        />
+        <Route path="/registro" element={<RegistroPage />} />
         <Route path="/" element={<Navigate to="/publicaciones" replace />} />
       </IonRouterOutlet>
     </IonReactRouter>
