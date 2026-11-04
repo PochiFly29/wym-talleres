@@ -1,10 +1,12 @@
 // Taller 10: OAuth con GitHub
 // Este es el servidor del Taller 9 (ya completo). Sigue los pasos del README
 // y completa cada sección marcada con un número.
+const variablesRequeridas = ["JWT_SECRET", "GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET", "GITHUB_REDIRECT_URI"];
+const faltantes = variablesRequeridas.filter((nombre) => !process.env[nombre]);
 
 // 1: Reemplazar esta verificación por una que revise también las variables de GitHub.
-if (!process.env.JWT_SECRET) {
-  console.error("Falta la variable de entorno JWT_SECRET. Revisa el archivo .env");
+if (faltantes.length > 0) {
+  console.error(`Faltan variables de entorno: ${faltantes.join(", ")}. Revisa el archivo .env`);
   process.exit(1);
 }
 
@@ -15,7 +17,7 @@ const postsRouter = require("./routes/posts");
 const usuariosRouter = require("./routes/usuarios");
 const loginRouter = require("./routes/login");
 // 3: Importar el router de autenticación con GitHub.
-
+const authRouter = require("./routes/auth");
 const app = express();
 
 app.use(morgan("tiny"));
@@ -34,6 +36,7 @@ app.use("/api/posts", postsRouter);
 app.use("/api/usuarios", usuariosRouter);
 app.use("/api/login", loginRouter);
 // 3: Montar el router de autenticación en "/api/auth".
+app.use("/api/auth", authRouter);
 
 const endpointDesconocido = (req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
