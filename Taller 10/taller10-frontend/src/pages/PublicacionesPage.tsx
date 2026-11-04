@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  IonAvatar,
   IonButton,
   IonButtons,
   IonContent,
@@ -44,11 +45,6 @@ import type { DatosPublicacion, Publicacion } from "../services/api";
 import { cerrarSesion, obtenerSesion } from "../services/sesion";
 import "./PublicacionesPage.css";
 
-// Esta página ya está lista: no necesitas modificarla
-// (salvo para el experimento «Ocultar no es proteger» del README).
-
-// Experimento: cambia a true para mostrar los botones de editar y eliminar
-// también en las publicaciones de otros usuarios.
 const MOSTRAR_ACCIONES_EN_TODAS = false;
 
 const mensajeDeError = (error: unknown) => (error instanceof Error ? error.message : String(error));
@@ -79,7 +75,6 @@ const PublicacionesPage: React.FC = () => {
     router.push("/login", "root", "replace");
   };
 
-  // Un 401 significa que el servidor no sabe quién somos: volvemos al login.
   const manejarError = (error: unknown) => {
     if (error instanceof ErrorApi && error.status === 401) {
       if (error.message === "Token requerido" && obtenerSesion()) {
@@ -93,7 +88,6 @@ const PublicacionesPage: React.FC = () => {
     mostrarMensaje(mensajeDeError(error), "danger");
   };
 
-  // GET: carga las publicaciones (ruta pública, no necesita token).
   const cargar = useCallback(async () => {
     setErrorCarga("");
     try {
@@ -110,14 +104,18 @@ const PublicacionesPage: React.FC = () => {
     cargar();
   }, [cargar]);
 
-  // Cada vez que se entra a la página: se lee la sesión y se verifica el token
-  // con la ruta protegida GET /api/usuarios/yo.
   useIonViewWillEnter(() => {
     const actual = obtenerSesion();
     setSesion(actual);
     cargar();
     if (actual) {
-      obtenerPerfil().catch(manejarError);
+      obtenerPerfil()
+        .then((perfil) => {
+          if (perfil.avatarUrl) {
+            setSesion((prev) => (prev ? { ...prev, avatarUrl: perfil.avatarUrl } : prev));
+          }
+        })
+        .catch(manejarError);
     }
   });
 
@@ -139,7 +137,6 @@ const PublicacionesPage: React.FC = () => {
     setModalAbierto(true);
   };
 
-  // POST o PUT, según si estamos creando o editando (rutas protegidas).
   const guardar = async (datos: DatosPublicacion) => {
     setGuardando(true);
     try {
@@ -159,7 +156,6 @@ const PublicacionesPage: React.FC = () => {
     }
   };
 
-  // DELETE, después de confirmar (ruta protegida).
   const confirmarEliminacion = (publicacion: Publicacion) => {
     presentarAlerta({
       header: "Eliminar publicación",
@@ -193,6 +189,11 @@ const PublicacionesPage: React.FC = () => {
           <IonButtons slot="end">
             {sesion ? (
               <>
+                {sesion.avatarUrl && (
+                  <IonAvatar style={{ width: "28px", height: "28px", marginRight: "8px" }}>
+                    <img src={sesion.avatarUrl} alt={sesion.username} />
+                  </IonAvatar>
+                )}
                 <span className="usuario">{sesion.username}</span>
                 <IonButton onClick={salir}>Salir</IonButton>
               </>

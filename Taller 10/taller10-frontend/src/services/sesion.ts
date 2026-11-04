@@ -6,6 +6,7 @@ export interface Sesion {
   token: string;
   id: number;
   username: string;
+  avatarUrl?: string;
 }
 
 const CLAVE = "taller9-sesion";

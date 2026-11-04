@@ -11,6 +11,16 @@ const router = express.Router();
 // Clave: state → Valor: { codeVerifier, expira }
 const estados = new Map();
 const DIEZ_MINUTOS = 10 * 60 * 1000;
+const UN_MINUTO = 60 * 1000;
+
+setInterval(() => {
+  const ahora = Date.now();
+  for (const [state, datos] of estados.entries()) {
+    if (datos.expira < ahora) {
+      estados.delete(state);
+    }
+  }
+}, UN_MINUTO);
 
 // Elige un nombre de usuario que no exista (ya está listo).
 // Si "ana" ya existe, prueba "ana-github", luego "ana-github2", etc.
@@ -98,18 +108,21 @@ router.post("/github", async (req, res) => {
     usuario = {
       id: Math.max(...usuarios.map((u) => u.id)) + 1,
       username: nombreDisponible(perfil.login),
-      githubId: perfil.id
+      githubId: perfil.id,
+      avatarUrl: perfil.avatar_url
     };
     usuarios.push(usuario);
+  } else {
+    usuario.avatarUrl = perfil.avatar_url; // Opcional: actualiza si cambió su foto
   }
 
   // 5. Emitir NUESTRO JWT, igual que en routes/login.js.
   const token = jwt.sign(
-    { id: usuario.id, username: usuario.username },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRA || "1h" }
-  );
+  { id: usuario.id, username: usuario.username },
+  process.env.JWT_SECRET,
+  { expiresIn: process.env.JWT_EXPIRA || "1h" }
+);
 
-  res.json({ token, id: usuario.id, username: usuario.username });
+res.json({ token, id: usuario.id, username: usuario.username, avatarUrl: usuario.avatarUrl });
 });
 module.exports = router;
